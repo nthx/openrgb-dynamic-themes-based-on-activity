@@ -1,0 +1,10 @@
+[Unit]
+Description=OpenRGB
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/opt/openrgb-dynamic-themes-based-on-activity/services/openrgb-exec.sh
+
+[Install]
+WantedBy=multi-user.target
