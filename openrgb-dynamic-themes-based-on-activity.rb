@@ -5,19 +5,23 @@ class NotifyViaRgb
 
   #OPENRGB_BIN='/opt/OpenRGB/openrgb'
   OPENRGB_BIN='/usr/bin/openrgb'
+  # -z .. zones
+  # -d .. device 0: asus mobo, 1 - logitech keyboard
+  # -s size of specified device zone
 
   # only these can reset RGB state and actually control them
-  PATH_PARAMS="-d 0 -z 1 -s 5"
+  #PATH_PARAMS="-d 0 -z 1 -s 5"
+  PATH_PARAMS="--loglevel 0 -d 0 -z 1 -s 5"
 
-  START_PROFILE = '-m Static -c 000011'
-  DEFAULT_PROFILE_DAY = '-m Static -c 0000AA'
-  DEFAULT_PROFILE_NIGHT = '-m Static -c 000022'
-  #DEFAULT_PROFILE_DAY = '-m Breathing -c 0000AA'
-  #DEFAULT_PROFILE_NIGHT = '-m Breathing -c 0000AA'
+  #START_PROFILE = '-m Static -c 000011'
+  #DEFAULT_PROFILE_DAY = '-m Static -c 0000AA'
+  #DEFAULT_PROFILE_NIGHT = '-m Static -c 000022'
+  START_PROFILE = '-m Static -c FF0000'
+  DEFAULT_PROFILE_DAY = '-m Static -c FFFF22'
+  DEFAULT_PROFILE_NIGHT = '-m Static -c BB0000'
 
   SSH_PROD_PROFILE = '-m Flashing -c FF0000'
-  SLACK_NEW_MSG_PROFILE = '-m Breathing -c 0000AA'
-  #SLACK_NEW_MSG_PROFILE = '-m Rainbow'
+  SLACK_NEW_MSG_PROFILE = '-m Breathing -c 0000FF'
   QUAKE3_PROFILE = '-m Static -c 220000'
   ZOOM_PROFILE = '-m Static -c FFFFFF'
   GMEET_PROFILE = '-m Static -c FFFFFF'
@@ -54,10 +58,11 @@ class NotifyViaRgb
         log "Found Q3.."
         change_profile QUAKE3_PROFILE
       else
-        log "Found nothing.."
         if day?
+          log "Found just day.."
           change_profile! DEFAULT_PROFILE_DAY
         else
+          log "Found just night.."
           change_profile! DEFAULT_PROFILE_NIGHT
         end
       end
@@ -119,5 +124,9 @@ class NotifyViaRgb
   end
 end
 
+puts "XXX: Removing log files.."
+cmd="rm ~/.config/OpenRGB/logs/*"
+out=`#{cmd}`
+puts "..done."
 
 NotifyViaRgb.new.main
